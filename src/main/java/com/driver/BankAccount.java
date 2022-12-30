@@ -1,5 +1,6 @@
 package com.driver;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class BankAccount {
@@ -45,16 +46,21 @@ public class BankAccount {
         //Each digit of an account number can lie between 0 and 9 (both inclusive)
         //Generate account number having given number of 'digits' such that the sum of digits is equal to 'sum'
         //If it is not possible, throw "Account Number can not be generated" exception
-        int currSum = 0, n = digits;
-        while(n>0){
-            currSum += n%10;
-            n /= 10;
-        }
-        if(currSum == sum){
+        if(sum>9*digits){
             throw new Exception("Account Number can not be generated");
         }
+        int[] num=new int[digits];
 
-        return String.valueOf(digits);
+        for(int i=0; i<digits; i++){
+            if(sum>=9){
+                num[i]=9;
+                sum=sum-9;
+            }else{
+                num[i]=sum;
+                sum=0;
+            }
+        }
+        return Arrays.toString(num);
     }
 
     public void deposit(double amount) {

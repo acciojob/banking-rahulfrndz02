@@ -45,20 +45,6 @@ public class BankAccount {
         //Each digit of an account number can lie between 0 and 9 (both inclusive)
         //Generate account number having given number of 'digits' such that the sum of digits is equal to 'sum'
         //If it is not possible, throw "Account Number can not be generated" exception
-//        try {
-//            for (int i = 0; i <= 9; i++) {
-//                //int n = rand.nextInt(10) + 0;
-//                //sum += Integer.toString(n);
-//                digits = digits + i;
-//                sum = Integer.parseInt(Integer.toString(digits));
-//            }
-//            return String.valueOf(sum);
-//        }
-//        catch (Exception e){
-//            System.out.println("Account Number can not be generated");
-//        }
-//        return null;
-
         int currSum = 0, n = digits;
         while(n>0){
             currSum += n%10;
@@ -73,9 +59,7 @@ public class BankAccount {
 
     public void deposit(double amount) {
         //add amount to balance
-        if(amount > 0){
             this.balance += balance;
-        }
     }
 
     public void withdraw(double amount) throws Exception {

@@ -6,14 +6,12 @@ public class CurrentAccount extends BankAccount {
     public CurrentAccount(String name, double balance, String tradeLicenseId) throws Exception {
         // minimum balance is 5000 by default. If balance is less than 5000, throw "Insufficient Balance" exception
         super(name, balance, 0);
-        try {
-            if (balance > 5000)
-                this.setMinBalance(5000.00);
-        } catch (Exception e) {
-            System.out.println("Insufficient Balance");
-        }
+       if(balance < 5000){
+           throw new Exception("Insufficient Balance");
+       }else{
+           this.setBalance(5000.00);
+       }
         this.tradeLicenseId = tradeLicenseId;
-        this.tradeLicenseId.toUpperCase();
     }
 
     public String getTradeLicenseId() {
@@ -24,24 +22,14 @@ public class CurrentAccount extends BankAccount {
         this.tradeLicenseId = tradeLicenseId;
     }
 
-    public boolean isValid(String str, int len) {
-        for (int i = 1; i < len; i++)
-        {
-            if (str.charAt(i) == str.charAt(i - 1))
-                return false;
-        }
-        // If the string is alternating
-        return true;
-    }
-
     public void validateLicenseId() throws Exception {
         // A trade license Id is said to be valid if no two consecutive characters are same
         // If the license Id is valid, do nothing
         // If the characters of the license Id can be rearranged to create any valid license Id
         // If it is not possible, throw "Valid License can not be generated" Exception
         String s = this.tradeLicenseId;
-        int max=0,n=s.length();
         boolean isValid = true;
+        int max=0,n=s.length();
         for(int i=1; i<n; i++){
             if(s.charAt(i) == s.charAt(i-1))
                 isValid = false;

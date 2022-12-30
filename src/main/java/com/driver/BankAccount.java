@@ -59,7 +59,7 @@ public class BankAccount {
 
     public void deposit(double amount) {
         //add amount to balance
-            this.balance += balance;
+            this.balance += amount;
     }
 
     public void withdraw(double amount) throws Exception {

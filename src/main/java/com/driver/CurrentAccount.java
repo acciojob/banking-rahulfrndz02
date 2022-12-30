@@ -12,6 +12,7 @@ public class CurrentAccount extends BankAccount {
         } catch (Exception e) {
             System.out.println("Insufficient Balance");
         }
+        this.tradeLicenseId = tradeLicenseId;
         this.tradeLicenseId.toUpperCase();
     }
 
@@ -23,39 +24,14 @@ public class CurrentAccount extends BankAccount {
         this.tradeLicenseId = tradeLicenseId;
     }
 
-    private String valid(String S){
-        int[] hash = new int[26];
-        for (int i = 0; i < S.length(); i++) {
-            hash[S.charAt(i) - 'a']++;
+    public boolean isValid(String str, int len) {
+        for (int i = 1; i < len; i++)
+        {
+            if (str.charAt(i) == str.charAt(i - 1))
+                return false;
         }
-        int max = 0, letter = 0;
-        for (int i = 0; i < hash.length; i++) {
-            if (hash[i] > max) {
-                max = hash[i];
-                letter = i;
-            }
-        }
-        if (max > (S.length() + 1) / 2) {
-            return "";
-        }
-        char[] res = new char[S.length()];
-        int idx = 0;
-        while (hash[letter] > 0) {
-            res[idx] = (char) (letter + 'a');
-            idx += 2;
-            hash[letter]--;
-        }
-        for (int i = 0; i < hash.length; i++) {
-            while (hash[i] > 0) {
-                if (idx >= res.length) {
-                    idx = 1;
-                }
-                res[idx] = (char) (i + 'a');
-                idx += 2;
-                hash[i]--;
-            }
-        }
-        return String.valueOf(res);
+        // If the string is alternating
+        return true;
     }
 
     public void validateLicenseId() throws Exception {
@@ -63,30 +39,50 @@ public class CurrentAccount extends BankAccount {
         // If the license Id is valid, do nothing
         // If the characters of the license Id can be rearranged to create any valid license Id
         // If it is not possible, throw "Valid License can not be generated" Exception
-//        int n = tradeLicenseId.length();
-//        char[] ch = tradeLicenseId.toCharArray();
-//        try {
-//            for (int i = 0; i < n; i++) {
-//                if (ch[i] == ch[i + 1]) {
-//                    char c = ch[i + 1];
-//                    ch[i + 1] = ch[i];
-//                    ch[i] = c;
-//                }
-//            }
-//        } catch (Exception e) {
-//            System.out.println("Valid License can not be generated");
-//        }
-        for(int i=0;i<tradeLicenseId.length()-1;i++){
-            if(tradeLicenseId.charAt(i)==tradeLicenseId.charAt(i+1)){
-                String s = valid(tradeLicenseId);
-                if(s.equals("")){
-                    throw new Exception("Valid License can not be generated");
-                }
-                else {
-                    tradeLicenseId=s;
-                }
-                break;
-            }
+        String s = this.tradeLicenseId;
+        int max=0,n=s.length();
+        boolean isValid = true;
+        for(int i=1; i<n; i++){
+            if(s.charAt(i) == s.charAt(i-1))
+                isValid = false;
         }
+        String ans = " ";
+        if(isValid == false){
+            int[] charMap = new int[26];
+            char mostUsedChar = s.charAt(0);
+            for(char c : s.toCharArray()){
+                charMap[c-'a']++;
+                if(charMap[c-'a'] > charMap[mostUsedChar-'a']){
+                    mostUsedChar = c;
+                }
+            }
+            char[] ansArray = new char[n];
+            int ansArrayIndex =0;
+            for(int i=-1; i<charMap.length; i++){
+                char currCh;
+                if(i == -1){
+                    currCh = mostUsedChar;
+                }else{
+                    currCh = (char)(i+ 'a');
+                }
+                while(charMap[currCh-'a'] > 0){
+                    if((ansArrayIndex>0 && ansArray[ansArrayIndex-1] == currCh) || (ansArrayIndex<ansArray.length-1 && ansArray[ansArrayIndex+1] == currCh)){
+                        isValid = false;
+                        throw  new Exception("Valid Licence can not be generated");
+                    }
+                    ansArray[ansArrayIndex] = currCh;
+
+                    if(ansArrayIndex +2 < ansArray.length){
+                        ansArrayIndex += 2;
+                    }else{
+                        ansArrayIndex += 1;
+                    }
+                    charMap[currCh-'a']--;
+                }
+            }
+            ans =new String(ansArray);
+        }
+        this.tradeLicenseId = ans;
+
     }
 }
